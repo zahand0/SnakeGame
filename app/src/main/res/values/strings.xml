@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Snake Game</string>
+    <string name="snake_icon">Snake icon</string>
+    <string name="new_game">New Game</string>
+    <string name="high_scores">High Scores</string>
+    <string name="back_button">Back Button</string>
+    <string name="your_score">Your score: %d</string>
 </resources>
