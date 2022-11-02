@@ -15,13 +15,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.snakegame.data.model.Coordinate
 import com.example.snakegame.domain.game.GameStatus
 import com.example.snakegame.domain.game.SnakeDirections
+import kotlinx.coroutines.flow.forEach
 
 @Composable
 fun GameScreen(
     gameViewModel: GameViewModel = hiltViewModel()
 ) {
     val gameState = gameViewModel.gameStateFlow.collectAsState(initial = null)
-
+    val score = gameViewModel.score
+    val highScores = gameViewModel.getHighScores().collectAsState(initial = listOf())
     when (gameState.value?.gameStatus) {
         GameStatus.PLAY -> {
             Column(
@@ -29,6 +31,7 @@ fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                Text(text = "Score: ${score.value}")
                 gameState.value?.let {
                     Board(it)
                 }
@@ -61,6 +64,12 @@ fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "YOU LOSE")
+                Text(text = "HIGH SCORES")
+                Column {
+                    highScores.value.forEach {
+                        Text(text = it.toString())
+                    }
+                }
                 Button(onClick = { gameViewModel.restartGame() }) {
                     Text(text = "RESTART")
                 }
