@@ -26,7 +26,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             SnakeGameTheme {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController)
+                Surface(
+                    color = MaterialTheme.colors.surface
+                ) {
+                    SetupNavGraph(navController = navController)
+                }
             }
         }
     }
