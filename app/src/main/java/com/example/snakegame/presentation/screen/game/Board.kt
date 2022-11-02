@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.snakegame.data.model.GameState
@@ -36,7 +37,8 @@ fun Board(
                     x = tileSize * gameState.foodCoordinate.x,
                     y = tileSize * gameState.foodCoordinate.y
                 )
-                .size(tileSize)
+                .size(tileSize / 2)
+                .offset(tileSize / 4, tileSize / 4)
                 .background(
                     color = MaterialTheme.colors.secondary,
                     shape = CircleShape
