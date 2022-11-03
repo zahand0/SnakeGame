@@ -104,10 +104,13 @@ class GameEngine(
             currentGameStatus.value = GameStatus.LOSE
             onGameEnded()
         }
-
+        val snakeCoordinates = if (currentGameStatus.value != GameStatus.LOSE)
+            listOf(newPosition) + currentGameState.snakeCoordinates.dropLast(eatenFood)
+        else
+            currentGameState.snakeCoordinates
         return currentGameState.copy(
             foodCoordinate = foodPosition,
-            snakeCoordinates = listOf(newPosition) + currentGameState.snakeCoordinates.dropLast(eatenFood),
+            snakeCoordinates = snakeCoordinates,
             currentDirection = currentDirection.value,
             gameStatus = currentGameStatus.value
         )
