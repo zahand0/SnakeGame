@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".SnakeGameApp"
         android:allowBackup="true"
@@ -12,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SnakeGame"
+        tools:replace="android:fullBackupContent"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
@@ -28,6 +32,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <meta-data
+            android:name="AF_DEV_KEY"
+            android:value="${APPSFLYER_DEV_KEY}" />
     </application>
-
 </manifest>
