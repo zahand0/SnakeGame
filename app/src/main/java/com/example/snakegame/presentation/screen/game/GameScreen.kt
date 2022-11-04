@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -200,6 +201,7 @@ fun RestartCard(
 
     Box(
         modifier = Modifier
+            .padding(20.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -218,7 +220,8 @@ fun RestartCard(
 
                 Text(
                     text = stringResource(id = R.string.your_score).format(score),
-                    style = MaterialTheme.typography.h1
+                    style = MaterialTheme.typography.h1,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Button(
