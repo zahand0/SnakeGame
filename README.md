@@ -1,8 +1,7 @@
 # Snake Game
 
 ### Snake game with saving max score, implemented integration with Firebase analytics, Firebase messaging, AppsFlyer, OneSignal
-
-<img src="https://user-images.githubusercontent.com/103197485/200044452-1478dcf1-4dcc-4528-8ef6-afe5e3fc7ca1.png" height="100"/><img src="https://user-images.githubusercontent.com/103197485/200045017-4bd92df3-50a3-4a8f-95ba-8999c6a3a956.png" height="100"/>
+<img src="https://user-images.githubusercontent.com/103197485/200050357-72d50bd9-c77c-434b-924f-83dd9af6b53a.png" height="100"/><img src="https://user-images.githubusercontent.com/103197485/200045017-4bd92df3-50a3-4a8f-95ba-8999c6a3a956.png" height="100"/>
 <img src="https://user-images.githubusercontent.com/103197485/200044524-80a7e688-54b7-45fe-b895-2fffa7de879a.png" height="100"/>
 ### Used libraries: Jetpack Compose, Accompanist, Coroutines, Dagger-Hilt, Compose Navigation
 ## Full app overview
