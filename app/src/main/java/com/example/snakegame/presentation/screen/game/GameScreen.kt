@@ -1,5 +1,6 @@
 package com.example.snakegame.presentation.screen.game
 
+import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.repeatable
@@ -13,12 +14,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.snakegame.R
 import com.example.snakegame.data.model.Coordinate
+import com.example.snakegame.data.model.GameState
 import com.example.snakegame.domain.game.GameStatus
 import com.example.snakegame.domain.game.SnakeDirections
 import com.example.snakegame.presentation.common.TopBar
@@ -33,12 +36,11 @@ fun GameScreen(
 ) {
     val gameState = gameViewModel.gameStateFlow.collectAsState(initial = null)
     val score = gameViewModel.score
-    val highScores = gameViewModel.getHighScores().collectAsState(initial = listOf())
 
-    var isLose by remember { mutableStateOf(false) }
+    var isLose by remember { mutableStateOf(true) }
     var isBoardVisible by remember { mutableStateOf(false) }
 
-    val snakeColor = animateColorAsState(
+    val snakeAnimatedColor = animateColorAsState(
         if (isLose) Red500 else Teal500,
         animationSpec = repeatable(
             iterations = 5,
@@ -46,6 +48,15 @@ fun GameScreen(
             repeatMode = RepeatMode.Reverse
         )
     )
+    val snakeBaseColor = remember {
+        Teal500
+    }
+    val snakeColor = remember {
+        mutableStateOf(snakeBaseColor)
+    }
+
+
+
     Scaffold(
         topBar = {
             TopBar(title = stringResource(id = R.string.your_score).format(score.value)) {
@@ -59,130 +70,194 @@ fun GameScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+
+
+            // start button
+            if (!isLose && !isBoardVisible) {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Button(
+                        modifier = Modifier.width(150.dp),
+                        onClick = {
+                            gameViewModel.startGame()
+                        },
+                        shape = CircleShape
+                    ) {
+                        Text(
+                            text = stringResource(R.string.start),
+                            style = MaterialTheme.typography.h3,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                    }
+                }
+            }
+            // board
             AnimatedVisibility(
                 visible = isBoardVisible,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround
-                ) {
-                    gameState.value?.let {
-                        Board(
-                            gameState = it,
-                            snakeColor = snakeColor.value
-                        )
-                    }
-                    GameController(
-                        onDirectionChange = {
-                            when (it) {
-                                SnakeDirections.LEFT -> {
-                                    gameViewModel.makeMove(Coordinate(x = -1, y = 0))
-                                }
-                                SnakeDirections.RIGHT -> {
-                                    gameViewModel.makeMove(Coordinate(x = 1, y = 0))
-                                }
-                                SnakeDirections.UP -> {
-                                    gameViewModel.makeMove(Coordinate(x = 0, y = -1))
-                                }
-                                SnakeDirections.DOWN -> {
-                                    gameViewModel.makeMove(Coordinate(x = 0, y = 1))
-                                }
-                            }
-                        }
-                    )
-
-                }
+                GameplayElements(
+                    gameState = gameState,
+                    snakeColor = snakeColor,
+                    gameViewModel = gameViewModel
+                )
             }
 
+            // restart
             AnimatedVisibility(
                 visible = isLose,
                 enter = scaleIn(),
-                exit = scaleOut()
+                exit = ExitTransition.None
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Card(
-                        shape = MaterialTheme.shapes.small,
-                        backgroundColor = MaterialTheme.colors.surface,
-                        border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .background(Color.Transparent)
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-
-                            Text(
-                                text = stringResource(id = R.string.your_score).format(score.value),
-                                style = MaterialTheme.typography.h1
-                            )
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Button(
-                                modifier = Modifier.width(150.dp),
-                                onClick = {
-                                    gameViewModel.restartGame()
-                                },
-                                shape = CircleShape
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.restart),
-                                    style = MaterialTheme.typography.h3,
-                                    color = MaterialTheme.colors.onPrimary
-                                )
-                            }
-
-                        }
-                    }
-                }
-
-
+                RestartCard(
+                    score = score.value,
+                    gameViewModel = gameViewModel
+                )
             }
             when (gameState.value?.gameStatus) {
                 GameStatus.PLAY -> {
+                    snakeColor.value = snakeBaseColor
                     isLose = false
                     isBoardVisible = true
                 }
                 GameStatus.LOSE -> {
+                    snakeColor.value = snakeAnimatedColor.value
                     isLose = true
                     isBoardVisible = true
                 }
                 else -> {
                     isLose = false
                     isBoardVisible = false
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        Button(
-                            modifier = Modifier.width(150.dp),
-                            onClick = {
-                                gameViewModel.startGame()
-                            },
-                            shape = CircleShape
-                        ) {
-                            Text(
-                                text = stringResource(R.string.start),
-                                style = MaterialTheme.typography.h3,
-                                color = MaterialTheme.colors.onPrimary
-                            )
-                        }
-                    }
                 }
             }
         }
     }
+}
 
+@Composable
+fun GameContent(
+    gameState: State<GameState?>,
+    snakeColor: State<Color>,
+    gameViewModel: GameViewModel
+) {
+    gameState.value?.let {
+        Board(
+            gameState = it,
+            snakeColor = snakeColor.value
+        )
+    }
+    GameController(
+        onDirectionChange = {
+            when (it) {
+                SnakeDirections.LEFT -> {
+                    gameViewModel.makeMove(Coordinate(x = -1, y = 0))
+                }
+                SnakeDirections.RIGHT -> {
+                    gameViewModel.makeMove(Coordinate(x = 1, y = 0))
+                }
+                SnakeDirections.UP -> {
+                    gameViewModel.makeMove(Coordinate(x = 0, y = -1))
+                }
+                SnakeDirections.DOWN -> {
+                    gameViewModel.makeMove(Coordinate(x = 0, y = 1))
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun RestartCard(
+    score: Int,
+    gameViewModel: GameViewModel
+) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            shape = MaterialTheme.shapes.small,
+            backgroundColor = MaterialTheme.colors.surface,
+            border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+
+                Text(
+                    text = stringResource(id = R.string.your_score).format(score),
+                    style = MaterialTheme.typography.h1
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Button(
+                    modifier = Modifier.width(150.dp),
+                    onClick = {
+                        gameViewModel.restartGame()
+                    },
+                    shape = CircleShape
+                ) {
+                    Text(
+                        text = stringResource(R.string.restart),
+                        style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+
+            }
+        }
+    }
+}
+
+
+@Composable
+fun GameplayElements(
+    gameState: State<GameState?>,
+    snakeColor: State<Color>,
+    gameViewModel: GameViewModel
+) {
+    when (LocalConfiguration.current.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+
+                GameContent(
+                    gameState = gameState,
+                    snakeColor = snakeColor,
+                    gameViewModel = gameViewModel
+                )
+            }
+        }
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                GameContent(
+                    gameState = gameState,
+                    snakeColor = snakeColor,
+                    gameViewModel = gameViewModel
+                )
+
+            }
+        }
+    }
 }

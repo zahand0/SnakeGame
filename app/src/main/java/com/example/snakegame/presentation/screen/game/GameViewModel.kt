@@ -9,7 +9,6 @@ import com.example.snakegame.domain.game.GameEngine
 import com.example.snakegame.domain.repository.DataStoreOperations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,10 +46,6 @@ class GameViewModel @Inject constructor(
 
     fun makeMove(move: Coordinate) {
         gameEngine.move = move
-    }
-
-    fun getHighScores(): Flow<List<Int>> {
-        return dataStore.readHighScores()
     }
 
 }

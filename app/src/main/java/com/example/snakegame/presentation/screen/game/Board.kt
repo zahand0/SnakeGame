@@ -7,12 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.example.snakegame.data.model.GameState
-import com.example.snakegame.presentation.theme.Teal500
 import com.example.snakegame.util.Constants.BOARD_SIZE
 
 @Composable
@@ -23,10 +22,10 @@ fun Board(
     BoxWithConstraints(
         modifier = Modifier.padding(16.dp)
     ) {
-        val tileSize = maxWidth / BOARD_SIZE
+        // board border
         Box(
             modifier = Modifier
-                .size(maxWidth)
+                .size(min(maxHeight, maxWidth))
                 .border(
                     border = BorderStroke(
                         width = 2.dp,
@@ -34,32 +33,42 @@ fun Board(
                     )
                 )
         )
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
-                .offset(
-                    x = tileSize * gameState.foodCoordinate.x,
-                    y = tileSize * gameState.foodCoordinate.y
-                )
-                .size(tileSize / 2)
-                .offset(tileSize / 4, tileSize / 4)
-                .background(
-                    color = MaterialTheme.colors.primary,
-                    shape = CircleShape
-                )
-        )
-        gameState.snakeCoordinates.forEach { coordinate ->
+                .padding(2.dp)
+        ) {
+            val minSide = min(maxHeight, maxWidth)
+            val tileSize = minSide / BOARD_SIZE
+            // food
             Box(
                 modifier = Modifier
                     .offset(
-                        x = tileSize * coordinate.x,
-                        y = tileSize * coordinate.y
+                        x = tileSize * gameState.foodCoordinate.x,
+                        y = tileSize * gameState.foodCoordinate.y
                     )
-                    .size(tileSize)
+                    .size(tileSize / 2)
+                    .offset(tileSize / 4, tileSize / 4)
                     .background(
-                        color = snakeColor,
-                        shape = MaterialTheme.shapes.medium
+                        color = MaterialTheme.colors.primary,
+                        shape = CircleShape
                     )
             )
+            // snake
+            gameState.snakeCoordinates.forEach { coordinate ->
+                Box(
+                    modifier = Modifier
+                        .offset(
+                            x = tileSize * coordinate.x,
+                            y = tileSize * coordinate.y
+                        )
+                        .size(tileSize)
+                        .background(
+                            color = snakeColor,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                )
+            }
         }
+
     }
 }

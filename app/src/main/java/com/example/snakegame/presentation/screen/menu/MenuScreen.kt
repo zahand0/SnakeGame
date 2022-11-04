@@ -1,8 +1,10 @@
 package com.example.snakegame.presentation.screen.menu
 
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -17,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.navigation.NavHostController
 import com.appsflyer.AppsFlyerLib
-import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.example.snakegame.R
 import com.example.snakegame.navigation.Screen
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -34,7 +35,8 @@ fun MenuScreen(
         val minSide = min(maxHeight, maxWidth)
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .scrollable(rememberScrollState(), Orientation.Vertical),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -44,7 +46,7 @@ fun MenuScreen(
                     R.string.snake_icon
                 ),
                 modifier = Modifier
-                    .size(minSide / 2)
+                    .size(minSide / 3)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
