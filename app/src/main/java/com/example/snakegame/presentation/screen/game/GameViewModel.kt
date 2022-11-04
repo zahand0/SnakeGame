@@ -9,6 +9,10 @@ import com.example.snakegame.domain.game.GameEngine
 import com.example.snakegame.domain.repository.DataStoreOperations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +23,10 @@ class GameViewModel @Inject constructor(
 
     private val _score = mutableStateOf(0)
     val score: State<Int> = _score
+    private val _foodEaten = mutableStateOf(false)
+    val foodEaten: State<Boolean> = _foodEaten
+    private val _gameOver = mutableStateOf(false)
+    val gameOver: State<Boolean> = _gameOver
 
     private val gameEngine = GameEngine(
         scope = viewModelScope,
@@ -26,9 +34,11 @@ class GameViewModel @Inject constructor(
             viewModelScope.launch(Dispatchers.IO) {
                 dataStore.saveHighScore(_score.value)
             }
+            _gameOver.value = !_gameOver.value
         },
         onFoodEaten = {
             _score.value += 1
+            _foodEaten.value = !_foodEaten.value
         }
     )
 

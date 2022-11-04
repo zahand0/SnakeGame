@@ -1,6 +1,9 @@
 package com.example.snakegame.presentation.screen.game
 
+import android.content.Context
 import android.content.res.Configuration
+import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.repeatable
@@ -15,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,12 +38,27 @@ fun GameScreen(
     navController: NavHostController,
     gameViewModel: GameViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val gameState = gameViewModel.gameStateFlow.collectAsState(initial = null)
     val score = gameViewModel.score
 
     var isLose by remember { mutableStateOf(true) }
     var isBoardVisible by remember { mutableStateOf(false) }
 
+    val isFoodEaten by remember {
+        gameViewModel.foodEaten
+    }
+    val isGameOver by remember {
+        gameViewModel.gameOver
+    }
+    LaunchedEffect(key1 = isFoodEaten) {
+        if (!isLose && isBoardVisible)
+            playFoodEatenSound(context)
+    }
+    LaunchedEffect(key1 = isGameOver) {
+        if (isLose)
+            playGameOverSound(context)
+    }
     val snakeAnimatedColor = animateColorAsState(
         if (isLose) Red500 else Teal500,
         animationSpec = repeatable(
@@ -260,4 +279,28 @@ fun GameplayElements(
             }
         }
     }
+}
+
+fun playFoodEatenSound(
+    context: Context
+) {
+    try {
+        val mediaPlayer = MediaPlayer.create(context, R.raw.eating)
+        mediaPlayer.start()
+    } catch (e: Exception) {
+        Log.e("GameScreen", "can't play sound eating", e)
+    }
+
+}
+
+fun playGameOverSound(
+    context: Context
+) {
+    try {
+        val mediaPlayer = MediaPlayer.create(context, R.raw.game_over)
+        mediaPlayer.start()
+    } catch (e: Exception) {
+        Log.e("GameScreen", "can't play sound eating", e)
+    }
+
 }
