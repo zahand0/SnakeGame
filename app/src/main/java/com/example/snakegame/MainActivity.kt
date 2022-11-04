@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.snakegame.navigation.SetupNavGraph
 import com.example.snakegame.presentation.theme.SnakeGameTheme
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
         private const val TAG = "MainActivity"
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app: ApplicationInfo = this.packageManager
@@ -58,7 +60,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             SnakeGameTheme {
-                navController = rememberNavController()
+                navController = rememberAnimatedNavController()
                 Surface(
                     color = MaterialTheme.colors.surface
                 ) {

@@ -80,6 +80,9 @@ dependencies {
     // System UI Controller - Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
+    // Navigation animation - Accompanist
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+
     // Appsflyer
     implementation 'com.appsflyer:af-android-sdk:6.9.0'
 

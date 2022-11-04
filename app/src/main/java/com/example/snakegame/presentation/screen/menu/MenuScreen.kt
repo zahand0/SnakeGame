@@ -1,5 +1,6 @@
 package com.example.snakegame.presentation.screen.menu
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -10,11 +11,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.navigation.NavHostController
@@ -33,6 +36,18 @@ fun MenuScreen(
         modifier = Modifier.padding(16.dp)
     ) {
         val minSide = min(maxHeight, maxWidth)
+        val snakeShaking by rememberInfiniteTransition().animateValue(
+            initialValue = (-15).dp,
+            targetValue = 15.dp,
+            typeConverter = Dp.VectorConverter,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 2000,
+                    easing = FastOutSlowInEasing
+                ),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -47,6 +62,7 @@ fun MenuScreen(
                 ),
                 modifier = Modifier
                     .size(minSide / 3)
+                    .offset(snakeShaking)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
