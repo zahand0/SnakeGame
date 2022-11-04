@@ -10,7 +10,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 
 @HiltAndroidApp
-class SnakeGameApp: Application() {
+class SnakeGameApp : Application() {
     companion object {
         private const val TAG = "SnakeGameApp"
     }
@@ -25,16 +25,18 @@ class SnakeGameApp: Application() {
             AppsFlyerLib.getInstance().init(devKey, null, this)
             AppsFlyerLib.getInstance().setDebugLog(true)
             AppsFlyerLib.getInstance().start(this, devKey, object : AppsFlyerRequestListener {
-            override fun onSuccess() {
-                Log.d(TAG, "Launch sent successfully")
-            }
+                override fun onSuccess() {
+                    Log.d(TAG, "Launch sent successfully")
+                }
 
-            override fun onError(errorCode: Int, errorDesc: String) {
-                Log.d(TAG, "Launch failed to be sent:\n" +
-                        "Error code: " + errorCode + "\n"
-                        + "Error description: " + errorDesc)
-            }
-        })
+                override fun onError(errorCode: Int, errorDesc: String) {
+                    Log.d(
+                        TAG, "Launch failed to be sent:\n" +
+                                "Error code: " + errorCode + "\n"
+                                + "Error description: " + errorDesc
+                    )
+                }
+            })
         }
     }
 }

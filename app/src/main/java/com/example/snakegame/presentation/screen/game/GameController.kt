@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.snakegame.domain.game.SnakeDirections
 import com.example.snakegame.presentation.theme.Purple500
-import com.example.snakegame.presentation.theme.Purple700
 import com.example.snakegame.presentation.theme.Shapes
 
 @Composable

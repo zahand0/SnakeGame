@@ -2,7 +2,7 @@ package com.example.snakegame.domain.game
 
 import com.example.snakegame.data.model.Coordinate
 
-fun Coordinate.toSnakeDirections():SnakeDirections {
+fun Coordinate.toSnakeDirections(): SnakeDirections {
     return when {
         this.x == 0 && this.y == -1 -> SnakeDirections.UP
         this.x == 0 && this.y == 1 -> SnakeDirections.DOWN

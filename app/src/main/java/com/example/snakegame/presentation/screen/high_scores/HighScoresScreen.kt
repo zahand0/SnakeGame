@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.snakegame.R
-import com.example.snakegame.navigation.Screen
 import com.example.snakegame.presentation.common.TopBar
 
 @Composable
