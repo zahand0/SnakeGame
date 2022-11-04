@@ -20,10 +20,12 @@ import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.example.snakegame.R
 import com.example.snakegame.navigation.Screen
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @Composable
 fun MenuScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    firebaseAnalytics: FirebaseAnalytics
 ) {
     val context = LocalContext.current
     BoxWithConstraints(
@@ -55,20 +57,8 @@ fun MenuScreen(
                 text = stringResource(R.string.new_game)
             ) {
                 navController.navigate(Screen.Game.route)
-                AppsFlyerLib.getInstance().logEvent(
-                    context,
-                    "af_click_new_game",
-                    null,
-                    object : AppsFlyerRequestListener {
-                    override fun onSuccess() {
-                        Log.d("MenuScreen", "Event sent successfully")
-                    }
-                    override fun onError(errorCode: Int, errorDesc: String) {
-                        Log.d("MenuScreen", "Event failed to be sent:\n" +
-                                "Error code: " + errorCode + "\n"
-                                + "Error description: " + errorDesc)
-                    }
-                })
+                AppsFlyerLib.getInstance().logEvent(context, "af_click_new_game", null)
+                firebaseAnalytics.logEvent("click_new_game", null)
             }
             Spacer(modifier = Modifier.height(16.dp))
             MenuButton(
@@ -77,6 +67,7 @@ fun MenuScreen(
             ) {
                 navController.navigate(Screen.HighScores.route)
                 AppsFlyerLib.getInstance().logEvent(context, "af_click_high_scores", null)
+                firebaseAnalytics.logEvent("click_high_scores", null)
             }
         }
     }

@@ -35,5 +35,8 @@
         <meta-data
             android:name="AF_DEV_KEY"
             android:value="${APPSFLYER_DEV_KEY}" />
+        <meta-data
+            android:name="ONESIGNAL_APP_ID"
+            android:value="${ONESIGNAL_APP_ID}" />
     </application>
 </manifest>
